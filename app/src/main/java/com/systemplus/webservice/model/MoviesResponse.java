@@ -1,10 +1,13 @@
 package com.systemplus.webservice.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MoviesResponse {
+public class MoviesResponse implements Parcelable {
 
 @SerializedName("adult")
 @Expose
@@ -82,7 +85,72 @@ private Double voteAverage;
 @Expose
 private Integer voteCount;
 
-public Boolean getAdult() {
+    protected MoviesResponse(Parcel in) {
+        byte tmpAdult = in.readByte();
+        adult = tmpAdult == 0 ? null : tmpAdult == 1;
+        backdropPath = in.readString();
+        if (in.readByte() == 0) {
+            budget = null;
+        } else {
+            budget = in.readInt();
+        }
+        homepage = in.readString();
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readInt();
+        }
+        imdbId = in.readString();
+        originalLanguage = in.readString();
+        originalTitle = in.readString();
+        overview = in.readString();
+        if (in.readByte() == 0) {
+            popularity = null;
+        } else {
+            popularity = in.readDouble();
+        }
+        posterPath = in.readString();
+        releaseDate = in.readString();
+        if (in.readByte() == 0) {
+            revenue = null;
+        } else {
+            revenue = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            runtime = null;
+        } else {
+            runtime = in.readInt();
+        }
+        status = in.readString();
+        tagline = in.readString();
+        title = in.readString();
+        byte tmpVideo = in.readByte();
+        video = tmpVideo == 0 ? null : tmpVideo == 1;
+        if (in.readByte() == 0) {
+            voteAverage = null;
+        } else {
+            voteAverage = in.readDouble();
+        }
+        if (in.readByte() == 0) {
+            voteCount = null;
+        } else {
+            voteCount = in.readInt();
+        }
+    }
+
+    public static final Creator<MoviesResponse> CREATOR = new Creator<MoviesResponse>() {
+        @Override
+        public MoviesResponse createFromParcel(Parcel in) {
+            return new MoviesResponse(in);
+        }
+
+        @Override
+        public MoviesResponse[] newArray(int size) {
+            return new MoviesResponse[size];
+        }
+    };
+
+    public Boolean getAdult() {
 return adult;
 }
 
@@ -281,5 +349,70 @@ return voteCount;
 public void setVoteCount(Integer voteCount) {
 this.voteCount = voteCount;
 }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeByte((byte) (adult == null ? 0 : adult ? 1 : 2));
+        parcel.writeString(backdropPath);
+        if (budget == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(budget);
+        }
+        parcel.writeString(homepage);
+        if (id == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(id);
+        }
+        parcel.writeString(imdbId);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(originalTitle);
+        parcel.writeString(overview);
+        if (popularity == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(popularity);
+        }
+        parcel.writeString(posterPath);
+        parcel.writeString(releaseDate);
+        if (revenue == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(revenue);
+        }
+        if (runtime == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(runtime);
+        }
+        parcel.writeString(status);
+        parcel.writeString(tagline);
+        parcel.writeString(title);
+        parcel.writeByte((byte) (video == null ? 0 : video ? 1 : 2));
+        if (voteAverage == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeDouble(voteAverage);
+        }
+        if (voteCount == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeInt(voteCount);
+        }
+    }
 
 }

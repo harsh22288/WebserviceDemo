@@ -1,6 +1,7 @@
 package com.systemplus.webservice.view;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import com.systemplus.webservice.adapter.MovieClassAdapter;
 import com.systemplus.webservice.api.ApiClient;
 import com.systemplus.webservice.api.ApiInterface;
 import com.systemplus.webservice.model.MovieData;
+import com.systemplus.webservice.model.MoviesResponse;
 import com.systemplus.webservice.model.Result;
 import com.systemplus.webservice.util.RecyclerItemClickListener;
 
@@ -22,12 +24,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseClass {
 
     RecyclerView moviesList;
 
-    private static final String API_KEY = "7e8f60e325cd06e164799af1e317d7a7";
-    private ProgressDialog mProgressDialog;
     private MovieClassAdapter mMovieClassAdapter;
 
     @Override
@@ -43,7 +43,28 @@ public class MainActivity extends AppCompatActivity {
                 new RecyclerItemClickListener(this, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Result  result = mMovieClassAdapter.getItemViewType()
+
+                        Result  result = mMovieClassAdapter.getItem(position);
+
+                      // This approach
+                     /*   final ApiInterface apiService =
+                                ApiClient.getClient().create(ApiInterface.class);
+                        Call<MoviesResponse> call = apiService.getMovieDetails(19404,API_KEY);
+                        call.enqueue(new Callback<MoviesResponse>() {
+                            @Override
+                            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                                MoviesResponse moviesResponse = response.body();
+                            }
+
+                            @Override
+                            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+
+                            }
+                        });*/
+                        Intent newIntent = new Intent(MainActivity.this, ShowDetail.class);
+                        newIntent.putExtra("id", result.getId());
+                        startActivity(newIntent);
+
 
                     }
                 })
@@ -73,22 +94,5 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void hidProgressDialog() {
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
 
-    }
-
-    private void showProgressDialog() {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading data, Please wait");
-        mProgressDialog.setCancelable(false);
-        mProgressDialog.show();
-    }
-
-
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
 }
